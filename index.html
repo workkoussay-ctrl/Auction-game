@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>FUT Auction Game</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0b1020;
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    margin: 15px;
+}
+
+/* Joueur affiché */
+#player {
+    font-size: 24px;
+    margin: 20px;
+    padding: 15px;
+    background: #1e293b;
+    border-radius: 12px;
+}
+
+/* Boutons */
+button {
+    padding: 12px 18px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+.btnA { background: #22c55e; }
+.btnB { background: #3b82f6; }
+.btnNext { background: #f59e0b; }
+.btnRestart { background: #ef4444; }
+
+/* Terrain */
+.pitch {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/* Equipes */
+.team {
+    width: 45%;
+}
+
+.field {
+    background: linear-gradient(#14532d, #166534);
+    border-radius: 15px;
+    padding: 20px;
+    height: 300px;
+    position: relative;
+}
+
+/* Formation */
+.row {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+/* Carte joueur style FIFA */
+.card {
+    width: 70px;
+    height: 90px;
+    background: linear-gradient(135deg, gold, orange);
+    border-radius: 10px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    text-align: center;
+    padding: 5px;
+    color: black;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>⚽ FUT Auction Game</h1>
+
+<div id="player">Clique sur Suivant</div>
+
+<button class="btnA" onclick="addPlayer('A')">Équipe A</button>
+<button class="btnB" onclick="addPlayer('B')">Équipe B</button>
+<br>
+<button class="btnNext" onclick="nextPlayer()">Suivant</button>
+<button class="btnRestart" onclick="restartGame()">Restart</button>
+
+<div class="pitch">
+
+<!-- TEAM A -->
+<div class="team">
+    <h2>Équipe A</h2>
+    <div class="field">
+        <div class="row" id="A-row1"></div>
+        <div class="row" id="A-row2"></div>
+    </div>
+</div>
+
+<!-- TEAM B -->
+<div class="team">
+    <h2>Équipe B</h2>
+    <div class="field">
+        <div class="row" id="B-row1"></div>
+        <div class="row" id="B-row2"></div>
+    </div>
+</div>
+
+</div>
+
+<script>
+
+const players = [
+"Lionel Messi","Cristiano Ronaldo","Mbappé","Haaland","Neymar",
+"De Bruyne","Salah","Kane","Lewandowski","Benzema",
+"Vinicius","Bellingham","Foden","Saka","Griezmann",
+"Bernardo Silva","Bruno Fernandes","Rodri","Kimmich","Kroos",
+"Modric","Casemiro","Rice","Pedri","Gavi",
+"Van Dijk","Hakimi","Rudiger","Marquinhos","Cancelo",
+"Courtois","Alisson","Donnarumma","Ter Stegen","Neuer",
+"Mahrez","Ziyech","Depay","Dybala","Di Maria",
+"Osimhen","Rashford","Dembele","Sané","Son",
+"Ronaldinho","Zidane","Ronaldo Nazario","Henry","Beckham"
+];
+
+let used = [];
+let teamA = [];
+let teamB = [];
+let current = "";
+
+/* Joueur aléatoire */
+function nextPlayer() {
+    let available = players.filter(p => !used.includes(p));
+    if (available.length === 0) return;
+
+    current = available[Math.floor(Math.random() * available.length)];
+    document.getElementById("player").innerText = current;
+}
+
+/* Ajouter joueur */
+function addPlayer(team) {
+    if (!current) return;
+
+    let card = `<div class="card">${current}</div>`;
+
+    if (team === "A" && teamA.length < 5) {
+        teamA.push(current);
+        placeCard("A", card, teamA.length);
+    }
+
+    if (team === "B" && teamB.length < 5) {
+        teamB.push(current);
+        placeCard("B", card, teamB.length);
+    }
+
+    used.push(current);
+    current = "";
+    document.getElementById("player").innerText = "Suivant";
+}
+
+/* Placement formation 2-3 */
+function placeCard(team, card, count) {
+    if (count <= 2) {
+        document.getElementById(`${team}-row1`).innerHTML += card;
+    } else {
+        document.getElementById(`${team}-row2`).innerHTML += card;
+    }
+}
+
+/* Restart */
+function restartGame() {
+    used = [];
+    teamA = [];
+    teamB = [];
+    current = "";
+
+    document.getElementById("A-row1").innerHTML = "";
+    document.getElementById("A-row2").innerHTML = "";
+    document.getElementById("B-row1").innerHTML = "";
+    document.getElementById("B-row2").innerHTML = "";
+
+    document.getElementById("player").innerText = "Clique sur Suivant";
+}
+
+</script>
+
+</body>
+</html>
