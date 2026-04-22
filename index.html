@@ -2,199 +2,240 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>FUT Auction Game</title>
+<title>FUT Auction Game PRO</title>
 
 <style>
 body {
     margin: 0;
     font-family: Arial;
-    background: #0b1020;
+    background: #111;
     color: white;
     text-align: center;
 }
 
-h1 {
-    margin: 15px;
-}
+h1 { margin: 10px; }
 
-/* Joueur affiché */
 #player {
-    font-size: 24px;
-    margin: 20px;
-    padding: 15px;
-    background: #1e293b;
-    border-radius: 12px;
+    font-size: 26px;
+    margin: 15px;
+    padding: 12px;
+    background: #222;
+    border-radius: 10px;
 }
 
 /* Boutons */
+.controls { margin: 10px; }
+
 button {
     padding: 12px 18px;
     margin: 5px;
-    border: none;
     border-radius: 10px;
-    font-size: 15px;
+    border: none;
+    font-weight: bold;
 }
 
-.btnA { background: #22c55e; }
-.btnB { background: #3b82f6; }
+.btnA { background: #16a34a; }
+.btnB { background: #2563eb; }
 .btnNext { background: #f59e0b; }
-.btnRestart { background: #ef4444; }
+.btnRestart { background: #dc2626; }
+.btnResult { background: purple; color:white; }
 
 /* Terrain */
 .pitch {
     display: flex;
     justify-content: space-around;
-    margin-top: 20px;
 }
 
-/* Equipes */
-.team {
-    width: 45%;
-}
+.team { width: 45%; }
 
+.budget {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+/*https://img.freepik.com/free-vector/vector-green-soccer-field-football-field-gridiron_1284-41290.jpg*/
 .field {
-    background: linear-gradient(#14532d, #166534);
+    background-image: url("https://img.freepik.com/free-vector/vector-green-soccer-field-football-field-gridiron_1284-41290.jpg");
+    background-size: cover;
     border-radius: 15px;
-    padding: 20px;
-    height: 300px;
+    height: 450px;
     position: relative;
 }
 
-/* Formation */
-.row {
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
-}
-
-/* Carte joueur style FIFA */
+/* Cartes FUT */
 .card {
-    width: 70px;
-    height: 90px;
+    position: absolute;
+    width: 95px;
+    height: 120px;
     background: linear-gradient(135deg, gold, orange);
-    border-radius: 10px;
-    margin: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    text-align: center;
-    padding: 5px;
+    border-radius: 15px;
+    padding: 6px;
     color: black;
     font-weight: bold;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
+
+.name { font-size: 13px; }
+.price { font-size: 12px; }
+.pos {
+    font-size: 11px;
+    background: black;
+    color: gold;
+    border-radius: 5px;
+    margin-bottom: 4px;
+}
+
+/* positions */
+.pos1 { top: 10%; left: 20%; }
+.pos2 { top: 10%; right: 20%; }
+.pos3 { top: 40%; left: 50%; transform: translateX(-50%); }
+.pos4 { bottom: 10%; left: 20%; }
+.pos5 { bottom: 10%; right: 20%; }
+
 </style>
 </head>
 
 <body>
 
-<h1>⚽ FUT Auction Game</h1>
+<h1>⚽ FUT Auction Game PRO</h1>
 
 <div id="player">Clique sur Suivant</div>
 
-<button class="btnA" onclick="addPlayer('A')">Équipe A</button>
-<button class="btnB" onclick="addPlayer('B')">Équipe B</button>
-<br>
-<button class="btnNext" onclick="nextPlayer()">Suivant</button>
-<button class="btnRestart" onclick="restartGame()">Restart</button>
+<div class="controls">
+    <button class="btnB" onclick="addPlayer('B')">Équipe B</button>
+    <button class="btnNext" onclick="nextPlayer()">Suivant</button>
+    <button class="btnA" onclick="addPlayer('A')">Équipe A</button>
+    <button class="btnResult" onclick="result()">Résultat</button>
+    <button class="btnRestart" onclick="restartGame()">Restart</button>
+</div>
 
 <div class="pitch">
 
-<!-- TEAM A -->
-<div class="team">
-    <h2>Équipe A</h2>
-    <div class="field">
-        <div class="row" id="A-row1"></div>
-        <div class="row" id="A-row2"></div>
-    </div>
-</div>
-
-<!-- TEAM B -->
 <div class="team">
     <h2>Équipe B</h2>
-    <div class="field">
-        <div class="row" id="B-row1"></div>
-        <div class="row" id="B-row2"></div>
-    </div>
+    <div class="budget" id="budgetB">💰 300M</div>
+    <div class="field" id="fieldB"></div>
+</div>
+
+<div class="team">
+    <h2>Équipe A</h2>
+    <div class="budget" id="budgetA">💰 300M</div>
+    <div class="field" id="fieldA"></div>
 </div>
 
 </div>
+
+<h2 id="winner"></h2>
 
 <script>
 
-const players = [
-"Lionel Messi","Cristiano Ronaldo","Mbappé","Haaland","Neymar",
-"De Bruyne","Salah","Kane","Lewandowski","Benzema",
-"Vinicius","Bellingham","Foden","Saka","Griezmann",
-"Bernardo Silva","Bruno Fernandes","Rodri","Kimmich","Kroos",
-"Modric","Casemiro","Rice","Pedri","Gavi",
-"Van Dijk","Hakimi","Rudiger","Marquinhos","Cancelo",
-"Courtois","Alisson","Donnarumma","Ter Stegen","Neuer",
-"Mahrez","Ziyech","Depay","Dybala","Di Maria",
-"Osimhen","Rashford","Dembele","Sané","Son",
-"Ronaldinho","Zidane","Ronaldo Nazario","Henry","Beckham"
-];
+const players = ["Messi","Ronaldo","Mbappé","Haaland","Neymar","De Bruyne","Salah","Kane","Benzema","Vinicius","Foden","Griezmann","Rodri","Modric","Hakimi","Van Dijk","Courtois","Neuer","Mahrez","Dybala","Osimhen","Rashford","Dembele","Son","Zidane"];
+
+const positions = ["AT","AT","MC","DF","GK"];
 
 let used = [];
 let teamA = [];
 let teamB = [];
+let scoreA = 0;
+let scoreB = 0;
+let budgetA = 300;
+let budgetB = 300;
 let current = "";
 
-/* Joueur aléatoire */
 function nextPlayer() {
     let available = players.filter(p => !used.includes(p));
-    if (available.length === 0) return;
-
+    if (!available.length) return;
     current = available[Math.floor(Math.random() * available.length)];
     document.getElementById("player").innerText = current;
 }
 
-/* Ajouter joueur */
 function addPlayer(team) {
     if (!current) return;
 
-    let card = `<div class="card">${current}</div>`;
+    let price = prompt("Prix ?");
+    if (!price || isNaN(price)) return;
+    price = parseInt(price);
 
-    if (team === "A" && teamA.length < 5) {
+    let pos = positions[Math.floor(Math.random()*positions.length)];
+
+    if (team === "A") {
+        if (teamA.length >= 5) return;
+        if (budgetA < price) return alert("Budget insuffisant");
+        budgetA -= price;
+        scoreA += calcScore(price,pos);
+        place("A", current, price, pos, teamA.length);
         teamA.push(current);
-        placeCard("A", card, teamA.length);
     }
 
-    if (team === "B" && teamB.length < 5) {
+    if (team === "B") {
+        if (teamB.length >= 5) return;
+        if (budgetB < price) return alert("Budget insuffisant");
+        budgetB -= price;
+        scoreB += calcScore(price,pos);
+        place("B", current, price, pos, teamB.length);
         teamB.push(current);
-        placeCard("B", card, teamB.length);
     }
 
     used.push(current);
     current = "";
-    document.getElementById("player").innerText = "Suivant";
+    updateBudget();
 }
 
-/* Placement formation 2-3 */
-function placeCard(team, card, count) {
-    if (count <= 2) {
-        document.getElementById(`${team}-row1`).innerHTML += card;
-    } else {
-        document.getElementById(`${team}-row2`).innerHTML += card;
-    }
+function calcScore(price,pos){
+    let bonus = 0;
+    if(pos==="AT") bonus=10;
+    if(pos==="MC") bonus=7;
+    if(pos==="DF") bonus=5;
+    if(pos==="GK") bonus=4;
+    return price + bonus;
 }
 
-/* Restart */
-function restartGame() {
-    used = [];
-    teamA = [];
-    teamB = [];
-    current = "";
+function place(team,name,price,pos,index){
+    const positionsMap = ["pos1","pos2","pos3","pos4","pos5"];
+    let field = document.getElementById("field"+team);
 
-    document.getElementById("A-row1").innerHTML = "";
-    document.getElementById("A-row2").innerHTML = "";
-    document.getElementById("B-row1").innerHTML = "";
-    document.getElementById("B-row2").innerHTML = "";
+    let card = document.createElement("div");
+    card.className = "card "+positionsMap[index];
+    card.innerHTML = `
+        <div class="pos">${pos}</div>
+        <div class="name">${name}</div>
+        <div class="price">${price}M</div>
+    `;
+    field.appendChild(card);
+}
 
-    document.getElementById("player").innerText = "Clique sur Suivant";
+function result(){
+    let text="";
+    if(scoreA>scoreB) text="🏆 Équipe A gagne !";
+    else if(scoreB>scoreA) text="🏆 Équipe B gagne !";
+    else text="🤝 Égalité !";
+
+    document.getElementById("winner").innerText =
+    text + " | Score A: "+scoreA+" - Score B: "+scoreB;
+}
+
+function updateBudget(){
+    document.getElementById("budgetA").innerText="💰 "+budgetA+"M";
+    document.getElementById("budgetB").innerText="💰 "+budgetB+"M";
+}
+
+function restartGame(){
+    used=[]; teamA=[]; teamB=[];
+    scoreA=0; scoreB=0;
+    budgetA=300; budgetB=300;
+    current="";
+
+    document.getElementById("fieldA").innerHTML="";
+    document.getElementById("fieldB").innerHTML="";
+    document.getElementById("winner").innerText="";
+    updateBudget();
 }
 
 </script>
 
 </body>
 </html>
+
