@@ -8,59 +8,71 @@
 body {
     margin: 0;
     font-family: Arial;
-    background: #111;
+    background: #0b0f1a;
     color: white;
     text-align: center;
 }
 
-h1 { margin: 10px; }
-
+/* Nom joueur (design chic) */
 #player {
-    font-size: 24px;
+    font-size: 26px;
     margin: 15px;
-    padding: 10px;
-    background: #222;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(90deg,#1f2937,#111827);
+    box-shadow: 0 0 10px rgba(255,215,0,0.3);
+    letter-spacing: 1px;
 }
 
-/* boutons */
+/* Bouton */
 button {
-    padding: 10px 14px;
-    margin: 5px;
-    border-radius: 8px;
+    padding: 12px 20px;
+    border-radius: 10px;
     border: none;
     font-weight: bold;
 }
 
-.btnA { background: #16a34a; color:white; }
-.btnB { background: #2563eb; color:white; }
-.btnNext { background: #f59e0b; }
-.btnRestart { background: #dc2626; color:white; }
+.btnNext {
+    background: gold;
+    color: black;
+    margin: 10px;
+}
 
-/* layout vertical */
+/* Layout vertical */
 .container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
 }
 
-/* équipe */
+/* Team */
 .team {
     width: 95%;
     margin: auto;
 }
 
-/* terrain vertical */
+/* Titre cliquable */
+.team h2 {
+    cursor: pointer;
+    background: linear-gradient(90deg,#2563eb,#1d4ed8);
+    padding: 8px;
+    border-radius: 10px;
+}
+
+.teamA h2 {
+    background: linear-gradient(90deg,#16a34a,#15803d);
+}
+
+/* Terrain */
 .field {
     background-image: url("https://img.freepik.com/free-vector/vector-green-soccer-field-football-field-gridiron_1284-41290.jpg");
     background-size: cover;
-    background-position: center;
     border-radius: 15px;
     height: 500px;
     position: relative;
 }
 
-/* cartes */
+/* Cartes */
 .card {
     position: absolute;
     width: 85px;
@@ -76,29 +88,32 @@ button {
     justify-content: center;
 }
 
-.pos {
-    font-size: 10px;
-    background: black;
-    color: gold;
-    border-radius: 5px;
-    margin-bottom: 3px;
-}
-
+/* Texte carte */
+.rating { font-size: 16px; }
 .name { font-size: 12px; }
 .price { font-size: 11px; }
 
-/* formation verticale */
+/* positions */
 .p1 { top: 5%; left: 20%; }
 .p2 { top: 5%; right: 20%; }
-
 .p3 { top: 40%; left: 50%; transform: translateX(-50%); }
-
 .p4 { bottom: 5%; left: 20%; }
 .p5 { bottom: 5%; right: 20%; }
 
+/* budget */
 .budget {
     margin-bottom: 5px;
     font-weight: bold;
+}
+
+/* restart en bas */
+.footer {
+    margin: 20px;
+}
+
+.btnRestart {
+    background: red;
+    color: white;
 }
 
 </style>
@@ -106,53 +121,174 @@ button {
 
 <body>
 
-<h1>⚽ FUT Auction Mobile</h1>
+<h1>⚽ FUT Auction</h1>
 
 <div id="player">Clique sur Suivant</div>
 
-<div>
-    <button class="btnB" onclick="addPlayer('B')">Équipe B</button>
-    <button class="btnNext" onclick="nextPlayer()">Suivant</button>
-    <button class="btnA" onclick="addPlayer('A')">Équipe A</button>
-    <button class="btnRestart" onclick="restartGame()">Restart</button>
-</div>
+<button class="btnNext" onclick="nextPlayer()">Suivant</button>
 
 <div class="container">
 
 <!-- TEAM B -->
 <div class="team">
-    <h2>Équipe B</h2>
-    <div class="budget" id="budgetB">💰 300M</div>
+    <h2 onclick="addPlayer('A')">Équipe A </h2>
+    <div class="budget" id="budgetA">💰 500M</div>
     <div class="field" id="fieldB"></div>
 </div>
 
 <!-- TEAM A -->
-<div class="team">
-    <h2>Équipe A</h2>
-    <div class="budget" id="budgetA">💰 300M</div>
+<div class="team teamA">
+    <h2 onclick="addPlayer('B')">Équipe B </h2>
+    <div class="budget" id="budgetB">💰 500M</div>
     <div class="field" id="fieldA"></div>
 </div>
 
 </div>
 
+<div class="footer">
+    <button class="btnRestart" onclick="restartGame()">Restart</button>
+</div>
+
 <script>
 
-const players = ["Messi","Ronaldo","Mbappé","Haaland","Neymar","De Bruyne","Salah","Kane","Benzema","Vinicius","Foden","Griezmann","Rodri","Modric","Hakimi","Van Dijk","Courtois","Neuer","Mahrez","Dybala","Osimhen","Rashford","Dembele","Son","Zidane"];
+const players = [
+{name:"Lionel Messi", rating:93},
+{name:"Cristiano Ronaldo", rating:92},
+{name:"Kylian Mbappé", rating:91},
+{name:"Erling Haaland", rating:91},
+{name:"Neymar", rating:92},
 
-const positions = ["AT","MC","DF","GK"];
+{name:"Kevin De Bruyne", rating:91},
+{name:"Mohamed Salah", rating:91},
+{name:"Harry Kane", rating:90},
+{name:"Robert Lewandowski", rating:91},
+{name:"Karim Benzema", rating:91},
+
+{name:"Vinicius Jr", rating:89},
+{name:"Bellingham", rating:90},
+{name:"Foden", rating:86},
+{name:"Saka", rating:86},
+{name:"Griezmann", rating:87},
+
+{name:"Bernardo Silva", rating:87},
+{name:"Bruno Fernandes", rating:88},
+{name:"Rodri", rating:89},
+{name:"Kimmich", rating:88},
+{name:"Kroos", rating:90},
+
+{name:"Modric", rating:87},
+{name:"Casemiro", rating:88},
+{name:"Declan Rice", rating:87},
+{name:"De Jong", rating:88},
+{name:"Pedri", rating:87},
+
+{name:"Gavi", rating:85},
+{name:"Verratti", rating:87},
+{name:"Barella", rating:87},
+{name:"Mount", rating:85},
+{name:"Milinkovic-Savic", rating:86},
+
+{name:"Van Dijk", rating:89},
+{name:"Ruben Dias", rating:89},
+{name:"Marquinhos", rating:88},
+{name:"Rudiger", rating:86},
+{name:"Hakimi", rating:87},
+
+{name:"Theo Hernandez", rating:86},
+{name:"Davies", rating:85},
+{name:"Cancelo", rating:85},
+{name:"Walker", rating:85},
+{name:"Koulibaly", rating:86},
+
+{name:"Courtois", rating:90},
+{name:"Alisson", rating:89},
+{name:"Ederson", rating:87},
+{name:"Donnarumma", rating:88},
+{name:"Ter Stegen", rating:88},
+
+{name:"Neuer", rating:88},
+{name:"Bounou", rating:86},
+{name:"Emiliano Martinez", rating:84},
+{name:"Lloris", rating:87},
+{name:"Maignan", rating:85},
+
+{name:"Mahrez", rating:86},
+{name:"Ziyech", rating:81},
+{name:"Depay", rating:85},
+{name:"Dybala", rating:85},
+{name:"Di Maria", rating:87},
+
+{name:"Lautaro", rating:87},
+{name:"Nunez", rating:83},
+{name:"Osimhen", rating:87},
+{name:"Gabriel Jesus", rating:85},
+{name:"Firmino", rating:84},
+
+{name:"Grealish", rating:82},
+{name:"Rashford", rating:85},
+{name:"Sancho", rating:84},
+{name:"Dembele", rating:88},
+{name:"Coman", rating:84},
+
+{name:"Sane", rating:86},
+{name:"Chiesa", rating:84},
+{name:"Leao", rating:85},
+{name:"Son", rating:87},
+{name:"Pulisic", rating:81},
+
+{name:"Tielemans", rating:85},
+{name:"Xhaka", rating:86},
+{name:"Partey", rating:85},
+{name:"Kovacic", rating:86},
+{name:"Gundogan", rating:87},
+
+{name:"Olmo", rating:83},
+{name:"Odegaard", rating:86},
+{name:"Maddison", rating:85},
+{name:"Wirtz", rating:87},
+{name:"Szoboszlai", rating:86},
+
+{name:"Ben White", rating:83},
+{name:"Kounde", rating:85},
+{name:"Upamecano", rating:84},
+{name:"Lisandro Martinez", rating:83},
+{name:"Skriniar", rating:83},
+
+{name:"De Ligt", rating:83},
+{name:"Pique", rating:86},
+{name:"Sergio Ramos", rating:90},
+{name:"Thiago Silva", rating:88},
+{name:"Bonucci", rating:86},
+
+/* LÉGENDES PRIME 🔥 */
+{name:"Ronaldinho", rating:97},
+{name:"Zidane", rating:98},
+{name:"Ronaldo Nazario", rating:98},
+{name:"Henry", rating:95},
+{name:"Beckham", rating:92},
+
+{name:"Iniesta", rating:95},
+{name:"Xavi", rating:94},
+{name:"Gerrard", rating:94},
+{name:"Lampard", rating:93},
+{name:"Maldini", rating:94}
+];
 
 let used = [];
 let teamA = [];
 let teamB = [];
-let budgetA = 300;
-let budgetB = 300;
+let budgetA = 500;
+let budgetB = 500;
 let current = "";
 
 function nextPlayer(){
-    let available = players.filter(p => !used.includes(p));
+    let available = players.filter(p => !used.includes(p.name));
     if(!available.length) return;
+
     current = available[Math.floor(Math.random()*available.length)];
-    document.getElementById("player").innerText = current;
+
+    document.getElementById("player").innerHTML =
+        "⭐ " + current.rating + " — " + current.name;
 }
 
 function addPlayer(team){
@@ -162,13 +298,11 @@ function addPlayer(team){
     if(!price || isNaN(price)) return;
     price = parseInt(price);
 
-    let pos = positions[Math.floor(Math.random()*positions.length)];
-
     if(team==="A"){
         if(teamA.length>=5) return;
         if(budgetA<price) return alert("Budget insuffisant");
         budgetA-=price;
-        place("A",current,price,pos,teamA.length);
+        place("A", current, price, teamA.length);
         teamA.push(current);
     }
 
@@ -176,26 +310,29 @@ function addPlayer(team){
         if(teamB.length>=5) return;
         if(budgetB<price) return alert("Budget insuffisant");
         budgetB-=price;
-        place("B",current,price,pos,teamB.length);
+        place("B", current, price, teamB.length);
         teamB.push(current);
     }
 
-    used.push(current);
+    used.push(current.name);
     current="";
     updateBudget();
+    document.getElementById("player").innerText="Suivant";
 }
 
-function place(team,name,price,pos,index){
+function place(team, player, price, index){
     const posMap=["p1","p2","p3","p4","p5"];
     let field=document.getElementById("field"+team);
 
     let card=document.createElement("div");
     card.className="card "+posMap[index];
+
     card.innerHTML=`
-        <div class="pos">${pos}</div>
-        <div class="name">${name}</div>
-        <div class="price">${price}M</div>
+        <div class="rating">⭐ ${player.rating}</div>
+        <div class="name">${player.name}</div>
+        <div class="price">💰 ${price}M</div>
     `;
+
     field.appendChild(card);
 }
 
@@ -211,6 +348,7 @@ function restartGame(){
     document.getElementById("fieldA").innerHTML="";
     document.getElementById("fieldB").innerHTML="";
     updateBudget();
+    document.getElementById("player").innerText="Clique sur Suivant";
 }
 
 </script>
